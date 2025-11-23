@@ -22,66 +22,82 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Load all tasks for a specific date
+   */
   const loadTasks = useCallback(async (date: string) => {
     try {
       setIsLoading(true);
       setError(null);
       setCurrentDate(date);
       const loadedTasks = await taskService.getTasks(date);
-      setTasks(loadedTasks);
+      setTasks(loadedTasks.sort((a, b) => a.startTime.localeCompare(b.startTime)));
     } catch (err) {
-      setError('Failed to load tasks');
-      console.error(err);
+      const message = err instanceof Error ? err.message : 'Failed to load tasks';
+      setError(message);
+      console.error('TaskContext.loadTasks error:', err);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
+  /**
+   * Create a new task and refresh the task list
+   */
   const createTask = async (task: CreateTaskInput) => {
     try {
       setIsLoading(true);
       setError(null);
-      const newTask = await taskService.createTask(task);
-      setTasks((prev) => [...prev, newTask].sort((a, b) => a.startTime.localeCompare(b.startTime)));
+      await taskService.createTask(task);
+      // Refetch all tasks after creation to ensure consistency
+      const refreshedTasks = await taskService.getTasks(currentDate);
+      setTasks(refreshedTasks.sort((a, b) => a.startTime.localeCompare(b.startTime)));
     } catch (err) {
-      setError('Failed to create task');
+      const message = err instanceof Error ? err.message : 'Failed to create task';
+      setError(message);
+      console.error('TaskContext.createTask error:', err);
       throw err;
     } finally {
       setIsLoading(false);
     }
   };
 
+  /**
+   * Update an existing task and refresh the task list
+   */
   const updateTask = async (id: string, updates: UpdateTaskInput) => {
     try {
       setIsLoading(true);
       setError(null);
-      console.log('TaskContext.updateTask called with:', { id, updates });
       await taskService.updateTask(id, updates);
-      console.log('Task updated successfully, refetching tasks...');
-      // Refetch all tasks to ensure UI is in sync
-      const allTasks = await taskService.getTasks(currentDate);
-      setTasks(allTasks.sort((a, b) => a.startTime.localeCompare(b.startTime)));
+      // Refetch all tasks after update to ensure consistency
+      const refreshedTasks = await taskService.getTasks(currentDate);
+      setTasks(refreshedTasks.sort((a, b) => a.startTime.localeCompare(b.startTime)));
     } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to update task';
+      setError(message);
       console.error('TaskContext.updateTask error:', err);
-      setError('Failed to update task');
       throw err;
     } finally {
       setIsLoading(false);
     }
   };
 
+  /**
+   * Delete a task and refresh the task list
+   */
   const deleteTask = async (id: string) => {
     try {
       setIsLoading(true);
       setError(null);
-      console.log('TaskContext.deleteTask called with id:', id);
       await taskService.deleteTask(id);
-      console.log('Task deleted successfully, removing from state');
-      // Remove from state using either taskId or _id
-      setTasks((prev) => prev.filter((task) => task.taskId !== id && task._id !== id));
+      // Refetch all tasks after deletion to ensure consistency
+      const refreshedTasks = await taskService.getTasks(currentDate);
+      setTasks(refreshedTasks.sort((a, b) => a.startTime.localeCompare(b.startTime)));
     } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to delete task';
+      setError(message);
       console.error('TaskContext.deleteTask error:', err);
-      setError('Failed to delete task');
       throw err;
     } finally {
       setIsLoading(false);

@@ -2,21 +2,59 @@ import apiService from './api';
 import { type Task, type CreateTaskInput, type UpdateTaskInput } from '../types/task.types';
 
 class TaskService {
+  /**
+   * GET /api/tasks?date=YYYY-MM-DD
+   * Fetch all tasks for a specific date
+   */
   async getTasks(date: string): Promise<Task[]> {
-    return apiService.get<Task[]>('/tasks', { date });
+    try {
+      const tasks = await apiService.get<Task[]>('/tasks', { date });
+      return tasks;
+    } catch (error) {
+      console.error('TaskService.getTasks error:', error);
+      throw new Error('Failed to fetch tasks');
+    }
   }
 
+  /**
+   * POST /api/tasks
+   * Create a new task
+   */
   async createTask(task: CreateTaskInput): Promise<Task> {
-    return apiService.post<Task>('/tasks', task);
+    try {
+      const newTask = await apiService.post<Task>('/tasks', task);
+      return newTask;
+    } catch (error) {
+      console.error('TaskService.createTask error:', error);
+      throw new Error('Failed to create task');
+    }
   }
 
+  /**
+   * PATCH /api/tasks/:id
+   * Update an existing task by ID (supports both _id and taskId)
+   */
   async updateTask(id: string, updates: UpdateTaskInput): Promise<Task> {
-    return apiService.patch<Task>(`/tasks/${id}`, updates);
+    try {
+      const updatedTask = await apiService.patch<Task>(`/tasks/${id}`, updates);
+      return updatedTask;
+    } catch (error) {
+      console.error('TaskService.updateTask error:', error);
+      throw new Error('Failed to update task');
+    }
   }
 
+  /**
+   * DELETE /api/tasks/:id
+   * Delete a task by ID (supports both _id and taskId)
+   */
   async deleteTask(id: string): Promise<void> {
-    console.log('TaskService.deleteTask called with id:', id);
-    await apiService.delete(`/tasks/${id}`);
+    try {
+      await apiService.delete<{ message: string }>(`/tasks/${id}`);
+    } catch (error) {
+      console.error('TaskService.deleteTask error:', error);
+      throw new Error('Failed to delete task');
+    }
   }
 }
 

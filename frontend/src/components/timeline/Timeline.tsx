@@ -26,6 +26,7 @@ export const Timeline: React.FC<TimelineProps> = ({ date, showNewTaskForm, onClo
   const [showOverlapWarning, setShowOverlapWarning] = useState(false);
   const [overlappingTasks, setOverlappingTasks] = useState<Task[]>([]);
   const [pendingTask, setPendingTask] = useState<CreateTaskInput | null>(null);
+  const [pendingEditTask, setPendingEditTask] = useState<Task | null>(null);
 
   useEffect(() => {
     loadTasks(date);
@@ -75,6 +76,7 @@ export const Timeline: React.FC<TimelineProps> = ({ date, showNewTaskForm, onClo
     if (overlaps.length > 0) {
       setOverlappingTasks(overlaps);
       setPendingTask(taskData);
+      setPendingEditTask(editingTask); // Store the editing context
       setShowOverlapWarning(true);
       return;
     }
@@ -83,26 +85,43 @@ export const Timeline: React.FC<TimelineProps> = ({ date, showNewTaskForm, onClo
   };
 
   const submitTask = async (taskData: CreateTaskInput) => {
-    console.log('submitTask called with:', { taskData, editingTask });
-    if (editingTask) {
-      // For updates, exclude the date field and use taskId
-      const { date, ...updateData } = taskData;
-      const taskIdentifier = editingTask.taskId || editingTask._id;
-      console.log('Updating task:', taskIdentifier, 'with:', updateData);
-      await updateTask(taskIdentifier, updateData);
-    } else {
-      console.log('Creating new task with:', taskData);
-      await createTask(taskData);
+    try {
+      if (editingTask) {
+        // For updates, exclude the date field
+        const { date, ...updateData } = taskData;
+        const taskIdentifier = editingTask.taskId || editingTask._id;
+        await updateTask(taskIdentifier, updateData);
+      } else {
+        await createTask(taskData);
+      }
+      setIsFormOpen(false);
+      setEditingTask(null);
+    } catch (error) {
+      console.error('Failed to submit task:', error);
+      // Error is already handled in TaskContext
     }
-    setIsFormOpen(false);
-    setEditingTask(null);
   };
 
   const handleOverlapProceed = async () => {
     if (pendingTask) {
-      await submitTask(pendingTask);
+      try {
+        if (pendingEditTask) {
+          // This was an edit operation
+          const { date, ...updateData } = pendingTask;
+          const taskIdentifier = pendingEditTask.taskId || pendingEditTask._id;
+          await updateTask(taskIdentifier, updateData);
+        } else {
+          // This was a create operation
+          await createTask(pendingTask);
+        }
+        setIsFormOpen(false);
+        setEditingTask(null);
+      } catch (error) {
+        console.error('Failed to submit task:', error);
+      }
       setShowOverlapWarning(false);
       setPendingTask(null);
+      setPendingEditTask(null);
       setOverlappingTasks([]);
     }
   };
@@ -110,6 +129,7 @@ export const Timeline: React.FC<TimelineProps> = ({ date, showNewTaskForm, onClo
   const handleOverlapCancel = () => {
     setShowOverlapWarning(false);
     setPendingTask(null);
+    setPendingEditTask(null);
     setOverlappingTasks([]);
   };
 
@@ -131,7 +151,7 @@ export const Timeline: React.FC<TimelineProps> = ({ date, showNewTaskForm, onClo
       const taskIdentifier = dragState.draggedTask.taskId || dragState.draggedTask._id;
       await updateTask(taskIdentifier, { startTime, endTime });
     } catch (error) {
-      console.error('Failed to update task:', error);
+      // Error is already handled in TaskContext
     }
 
     handleDragEnd();
