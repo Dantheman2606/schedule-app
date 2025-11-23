@@ -1,6 +1,18 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
-require('dotenv').config();
+const dotenv = require('dotenv');
+
+// Load .env file before anything else
+const envPath = app.isPackaged 
+  ? path.join(process.resourcesPath, 'app', '.env')
+  : path.join(__dirname, '.env');
+
+dotenv.config({ path: envPath });
+
+// Make sure BACKEND_URL is available
+if (!process.env.BACKEND_URL) {
+  process.env.BACKEND_URL = 'http://localhost:3000/api';
+}
 
 // Simple check for development mode
 const isDev = !app.isPackaged;

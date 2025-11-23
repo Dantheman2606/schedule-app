@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "build": "node build.js",
-    "package": "npm run build && electron-packager . TimeBlockApp --platform=win32 --arch=x64 --out=dist --overwrite --icon=icon.ico",
+    "package": "npm run build && electron-packager . TimeBlockApp --platform=win32 --arch=x64 --out=dist --overwrite --icon=icon.ico --ignore=\"node_modules/(electron|electron-packager)\" --ignore=\"dist\" --ignore=\"frontend/node_modules\"",
     "package:all": "npm run build && electron-packager . TimeBlockApp --all --out=dist --overwrite"
   },
   "keywords": [

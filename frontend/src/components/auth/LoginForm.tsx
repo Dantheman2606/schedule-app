@@ -39,7 +39,19 @@ export const LoginForm: React.FC = () => {
       await login({ email, password });
       navigate('/');
     } catch (error: any) {
-      setErrors({ general: error.response?.data?.message || 'Login failed. Please try again.' });
+      let errorMessage = 'Login failed. Please try again.';
+      
+      // Check if it's a network error (backend not running)
+      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        errorMessage = 'Cannot connect to server. Please make sure the backend is running on ' + 
+                      (window.API_CONFIG?.baseURL || 'http://localhost:3000/api');
+      } else if (error.response?.status === 404) {
+        errorMessage = 'Cannot connect to server. Please make sure the backend is running.';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
+      setErrors({ general: errorMessage });
     } finally {
       setIsLoading(false);
     }
