@@ -2,18 +2,26 @@ import React from 'react';
 import { type Task } from '../../types/task.types';
 import { useCurrentTime } from '../../hooks/useCurrentTime';
 import { isTimeInRange } from '../../utils/timeUtils';
+import { getTodayString } from '../../utils/dateUtils';
 import './CurrentTaskDisplay.css';
 
 interface CurrentTaskDisplayProps {
   tasks: Task[];
+  currentDate: string;
 }
 
-export const CurrentTaskDisplay: React.FC<CurrentTaskDisplayProps> = ({ tasks }) => {
+export const CurrentTaskDisplay: React.FC<CurrentTaskDisplayProps> = ({ tasks, currentDate }) => {
   const { currentTime } = useCurrentTime();
+  const isToday = currentDate === getTodayString();
   
   const currentTask = tasks.find(task => 
     isTimeInRange(currentTime, task.startTime, task.endTime)
   );
+  
+  // Don't show current task display for future dates
+  if (!isToday) {
+    return null;
+  }
 
   if (!currentTask) {
     return (

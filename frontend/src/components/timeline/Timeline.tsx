@@ -187,7 +187,7 @@ export const Timeline: React.FC<TimelineProps> = ({ date, showNewTaskForm, onClo
         onDragOver={handleDragOver}
       >
         <TimeGrid />
-        <CurrentTimeIndicator />
+        <CurrentTimeIndicator currentDate={date} />
         
         {tasks.map((task) => {
           const overlaps = getOverlappingTasks(task);
