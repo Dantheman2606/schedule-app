@@ -1,0 +1,79 @@
+.overlap-warning {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.overlap-warning-icon {
+  font-size: 1.5rem;
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.overlap-warning-content {
+  flex: 1;
+}
+
+.overlap-warning-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fbbf24;
+  margin: 0 0 0.5rem 0;
+}
+
+.overlap-warning-message {
+  font-size: 0.875rem;
+  color: #f5f5f5;
+  margin: 0 0 0.75rem 0;
+}
+
+.overlap-warning-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.overlap-warning-list li {
+  font-size: 0.875rem;
+  color: #f5f5f5;
+  padding: 0.25rem 0;
+}
+
+.overlap-warning-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.overlap-warning-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.overlap-warning-button.primary {
+  background: #f59e0b;
+  color: #ffffff;
+}
+
+.overlap-warning-button.primary:hover {
+  background: #d97706;
+}
+
+.overlap-warning-button.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f5f5f5;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.overlap-warning-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
