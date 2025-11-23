@@ -23,8 +23,13 @@
   flex: 1;
   position: relative;
   overflow-y: auto;
-  overflow-x: hidden;
-  padding: 20px;
+  overflow-x: visible;
+}
+
+.timeline-wrapper {
+  position: relative;
+  padding: 40px 20px 20px 20px;
+  min-height: 1440px;
 }
 
 .timeline-content::-webkit-scrollbar {

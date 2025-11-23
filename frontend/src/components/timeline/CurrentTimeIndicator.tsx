@@ -5,12 +5,13 @@ import './CurrentTimeIndicator.css';
 export const CurrentTimeIndicator: React.FC = () => {
   const { currentMinutes } = useCurrentTime();
   
-  // Each hour is 60px, so calculate position in pixels
-  // currentMinutes is minutes since midnight (0-1439)
-  // Position in pixels = (currentMinutes / 60) * 60px per hour
+  // Position in pixels = minutes since midnight
+  // 1 minute = 1 pixel, so 11:41 = 701 minutes = 701px from top
   const positionInPixels = currentMinutes;
   
-  console.log('Current minutes:', currentMinutes, 'Position:', positionInPixels + 'px');
+  const hours = Math.floor(currentMinutes / 60);
+  const mins = Math.round(currentMinutes % 60);
+  console.log(`Current time: ${hours}:${mins.toString().padStart(2, '0')} = ${currentMinutes} minutes = ${positionInPixels}px`);
 
   useEffect(() => {
     // Scroll to current time on mount
@@ -23,11 +24,10 @@ export const CurrentTimeIndicator: React.FC = () => {
   return (
     <div 
       id="current-time-indicator"
-      className="current-time-indicator" 
-      style={{ top: `${positionInPixels}px` }}
+      className="current-time-indicator"
     >
-      <div className="current-time-line" />
-      <div className="current-time-dot" />
+      <div className="current-time-line" style={{ top: `${positionInPixels}px` }} />
+      <div className="current-time-dot" style={{ top: `${positionInPixels}px` }} />
     </div>
   );
 };

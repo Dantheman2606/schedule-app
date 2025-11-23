@@ -1,6 +1,9 @@
 .time-grid {
-  position: relative;
-  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1440px; /* 24 slots × 60px */
 }
 
 .time-slot {
@@ -13,7 +16,7 @@
 .time-label {
   position: absolute;
   left: 0;
-  top: -10px;
+  top: 0;
   font-size: 0.75rem;
   color: #a3a3a3;
   font-weight: 500;

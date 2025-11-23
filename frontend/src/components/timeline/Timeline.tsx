@@ -40,18 +40,22 @@ export const Timeline: React.FC<TimelineProps> = ({ date, showNewTaskForm, onClo
   }, [showNewTaskForm]);
 
   const handleTimelineClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).className === 'timeline-content') {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const y = e.clientY - rect.top;
-      const percentage = y / rect.height;
-      const minutes = Math.floor(percentage * 1440);
-      // Round to nearest 15 minutes
-      const roundedMinutes = Math.round(minutes / 15) * 15;
-      const timeString = minutesToTime(roundedMinutes);
-      
-      setDefaultStartTime(timeString);
-      setEditingTask(null);
-      setIsFormOpen(true);
+    const target = e.target as HTMLElement;
+    if (target.className === 'timeline-wrapper' || target.className === 'time-grid') {
+      const wrapper = e.currentTarget.querySelector('.timeline-wrapper') as HTMLElement;
+      if (wrapper) {
+        const rect = wrapper.getBoundingClientRect();
+        const y = e.clientY - rect.top;
+        // Direct pixel to minute conversion (1px = 1 minute)
+        const minutes = Math.floor(y);
+        // Round to nearest 15 minutes
+        const roundedMinutes = Math.round(minutes / 15) * 15;
+        const timeString = minutesToTime(Math.min(roundedMinutes, 1440));
+        
+        setDefaultStartTime(timeString);
+        setEditingTask(null);
+        setIsFormOpen(true);
+      }
     }
   };
 
@@ -71,7 +75,12 @@ export const Timeline: React.FC<TimelineProps> = ({ date, showNewTaskForm, onClo
   }, [deleteTask]);
 
   const handleFormSubmit = async (taskData: CreateTaskInput) => {
-    const overlaps = getOverlappingTasks(taskData);
+    // When editing, create a combined object with task data and IDs for overlap checking
+    const taskToCheck = editingTask 
+      ? { ...taskData, _id: editingTask._id, taskId: editingTask.taskId } as Task
+      : taskData;
+    
+    const overlaps = getOverlappingTasks(taskToCheck);
     
     if (overlaps.length > 0) {
       setOverlappingTasks(overlaps);

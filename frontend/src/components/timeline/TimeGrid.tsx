@@ -2,11 +2,10 @@ import React from 'react';
 import './TimeGrid.css';
 
 export const TimeGrid: React.FC = () => {
-  const hours = Array.from({ length: 25 }, (_, i) => i);
+  const hours = Array.from({ length: 24 }, (_, i) => i);
 
   const formatHour = (hour: number): string => {
-    const displayHour = hour === 24 ? 0 : hour;
-    return `${displayHour.toString().padStart(2, '0')}:00`;
+    return `${hour.toString().padStart(2, '0')}:00`;
   };
 
   return (

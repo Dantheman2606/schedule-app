@@ -106,14 +106,20 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const getOverlappingTasks = useCallback((targetTask: Task | CreateTaskInput): Task[] => {
     return tasks.filter((task) => {
-      // Skip comparing with itself if it's an existing task (check both IDs)
-      if ('_id' in targetTask && 'taskId' in targetTask) {
-        if (task._id === targetTask._id || task.taskId === targetTask.taskId) {
+      // Skip comparing with itself if it's an existing task being edited
+      if ('_id' in targetTask) {
+        // Check if this is the same task by comparing IDs
+        if (task._id === (targetTask as Task)._id) {
           return false;
+        }
+        if ('taskId' in targetTask && task.taskId && (targetTask as Task).taskId) {
+          if (task.taskId === (targetTask as Task).taskId) {
+            return false;
+          }
         }
       }
       
-      // Check for overlap
+      // Check for time overlap
       return (
         task.startTime < targetTask.endTime &&
         task.endTime > targetTask.startTime
