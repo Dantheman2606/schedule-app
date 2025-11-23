@@ -87,7 +87,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
       });
       handleClose();
     } catch (error) {
-      console.error('Failed to submit task:', error);
+      // Error is already handled in context
     } finally {
       setIsSubmitting(false);
     }

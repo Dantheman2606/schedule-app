@@ -21,7 +21,6 @@ router.get('/', authMiddleware, async (req: AuthRequest, res: Response) => {
 
     res.json(tasks);
   } catch (error) {
-    console.error('Get tasks error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -30,8 +29,6 @@ router.get('/', authMiddleware, async (req: AuthRequest, res: Response) => {
 router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { title, startTime, endTime, description, color, icon, date } = req.body;
-
-    console.log('POST /tasks called with:', req.body);
 
     // Validation
     if (!title || !startTime || !endTime || !date) {
@@ -79,7 +76,6 @@ router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(task);
   } catch (error) {
-    console.error('Create task error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -89,8 +85,6 @@ router.patch('/:id', authMiddleware, async (req: AuthRequest, res: Response) => 
   try {
     const { id } = req.params;
     const { title, startTime, endTime, description, color, icon } = req.body;
-
-    console.log('PATCH /tasks/:id called with:', { id, body: req.body });
 
     // Check if id is a valid ObjectId or a taskId string
     let query;
@@ -111,11 +105,8 @@ router.patch('/:id', authMiddleware, async (req: AuthRequest, res: Response) => 
     // Find task and verify ownership
     const task = await Task.findOne(query);
     if (!task) {
-      console.log('Task not found:', id);
       return res.status(404).json({ message: 'Task not found' });
     }
-
-    console.log('Found task to update:', task);
 
     // Validation
     if (title && title.length > 100) {
@@ -146,11 +137,8 @@ router.patch('/:id', authMiddleware, async (req: AuthRequest, res: Response) => 
       { new: true, runValidators: true }
     );
 
-    console.log('Task updated successfully:', updatedTask);
-
     res.json(updatedTask);
   } catch (error) {
-    console.error('Update task error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -159,8 +147,6 @@ router.patch('/:id', authMiddleware, async (req: AuthRequest, res: Response) => 
 router.delete('/:id', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
-
-    console.log('DELETE /tasks/:id called with:', { id, userId: req.userId });
 
     // Check if id is a valid ObjectId or a taskId string
     let query;
@@ -182,15 +168,11 @@ router.delete('/:id', authMiddleware, async (req: AuthRequest, res: Response) =>
     const deletedTask = await Task.findOneAndDelete(query);
 
     if (!deletedTask) {
-      console.log('Task not found for deletion:', id);
       return res.status(404).json({ message: 'Task not found' });
     }
 
-    console.log('Task deleted successfully:', deletedTask._id);
-
     res.json({ message: 'Task deleted successfully' });
   } catch (error) {
-    console.error('Delete task error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

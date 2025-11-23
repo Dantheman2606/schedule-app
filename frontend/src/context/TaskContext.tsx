@@ -35,7 +35,6 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load tasks';
       setError(message);
-      console.error('TaskContext.loadTasks error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +54,6 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to create task';
       setError(message);
-      console.error('TaskContext.createTask error:', err);
       throw err;
     } finally {
       setIsLoading(false);
@@ -76,7 +74,6 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to update task';
       setError(message);
-      console.error('TaskContext.updateTask error:', err);
       throw err;
     } finally {
       setIsLoading(false);
@@ -97,7 +94,6 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to delete task';
       setError(message);
-      console.error('TaskContext.deleteTask error:', err);
       throw err;
     } finally {
       setIsLoading(false);

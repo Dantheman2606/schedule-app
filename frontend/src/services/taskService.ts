@@ -11,7 +11,6 @@ class TaskService {
       const tasks = await apiService.get<Task[]>('/tasks', { date });
       return tasks;
     } catch (error) {
-      console.error('TaskService.getTasks error:', error);
       throw new Error('Failed to fetch tasks');
     }
   }
@@ -25,7 +24,6 @@ class TaskService {
       const newTask = await apiService.post<Task>('/tasks', task);
       return newTask;
     } catch (error) {
-      console.error('TaskService.createTask error:', error);
       throw new Error('Failed to create task');
     }
   }
@@ -39,7 +37,6 @@ class TaskService {
       const updatedTask = await apiService.patch<Task>(`/tasks/${id}`, updates);
       return updatedTask;
     } catch (error) {
-      console.error('TaskService.updateTask error:', error);
       throw new Error('Failed to update task');
     }
   }
@@ -52,7 +49,6 @@ class TaskService {
     try {
       await apiService.delete<{ message: string }>(`/tasks/${id}`);
     } catch (error) {
-      console.error('TaskService.deleteTask error:', error);
       throw new Error('Failed to delete task');
     }
   }

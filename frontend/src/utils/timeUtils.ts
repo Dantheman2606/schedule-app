@@ -33,15 +33,6 @@ export const getCurrentMinutesSinceMidnight = (): number => {
   const istOffset = 330; // 5.5 hours = 330 minutes
   const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
   const istMinutes = (utcMinutes + istOffset) % (24 * 60);
-  
-  console.log('Debug getCurrentMinutesSinceMidnight:', {
-    utcHours: now.getUTCHours(),
-    utcMinutes: now.getUTCMinutes(),
-    utcTotal: utcMinutes,
-    istMinutes: istMinutes,
-    istTime: `${Math.floor(istMinutes / 60)}:${Math.round(istMinutes % 60)}`
-  });
-  
   return istMinutes;
 };
 

@@ -69,7 +69,7 @@ export const Timeline: React.FC<TimelineProps> = ({ date, showNewTaskForm, onClo
       try {
         await deleteTask(taskId);
       } catch (error) {
-        console.error('Failed to delete task:', error);
+        // Error is already handled in TaskContext
       }
     }
   }, [deleteTask]);
@@ -106,7 +106,6 @@ export const Timeline: React.FC<TimelineProps> = ({ date, showNewTaskForm, onClo
       setIsFormOpen(false);
       setEditingTask(null);
     } catch (error) {
-      console.error('Failed to submit task:', error);
       // Error is already handled in TaskContext
     }
   };
@@ -126,7 +125,7 @@ export const Timeline: React.FC<TimelineProps> = ({ date, showNewTaskForm, onClo
         setIsFormOpen(false);
         setEditingTask(null);
       } catch (error) {
-        console.error('Failed to submit task:', error);
+        // Error is already handled in TaskContext
       }
       setShowOverlapWarning(false);
       setPendingTask(null);

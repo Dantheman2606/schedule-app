@@ -8,10 +8,6 @@ export const CurrentTimeIndicator: React.FC = () => {
   // Position in pixels = minutes since midnight
   // 1 minute = 1 pixel, so 11:41 = 701 minutes = 701px from top
   const positionInPixels = currentMinutes;
-  
-  const hours = Math.floor(currentMinutes / 60);
-  const mins = Math.round(currentMinutes % 60);
-  console.log(`Current time: ${hours}:${mins.toString().padStart(2, '0')} = ${currentMinutes} minutes = ${positionInPixels}px`);
 
   useEffect(() => {
     // Scroll to current time on mount
