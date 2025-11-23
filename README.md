@@ -9,10 +9,10 @@ A modern time-blocking day planner application built with React, TypeScript, Nod
 - ✅ 24-hour timeline view with 15-minute intervals
 - ✅ Real-time current time indicator
 - ✅ Active task highlighting with glow animation
-- ✅ Drag-and-drop task repositioning
 - ✅ Overlap detection and warnings
 - ✅ Color coding for tasks
 - ✅ Dark mode UI with glass morphism effects
+- ✅ Electron desktop application for Windows
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ A modern time-blocking day planner application built with React, TypeScript, Nod
 ### 1. Clone the repository
 
 ```bash
-cd c:\PICT\Schedule-app\schedule-app
+cd c:\Schedule-app\schedule-app
 ```
 
 ### 2. Set up MongoDB
@@ -82,6 +82,41 @@ npm run dev
 
 The frontend will run on `http://localhost:5173`
 
+### Run as Desktop Application (Electron)
+
+```bash
+cd app
+npm install
+npm run build
+npm start
+```
+
+Or use the quick start script:
+
+```bash
+cd app
+.\start.ps1
+```
+
+#### Package the Desktop App
+
+To create a distributable Windows application:
+
+```bash
+cd app
+npm run package
+```
+
+The packaged app will be in `app/dist/TimeBlockApp-win32-x64/`. Run `TimeBlockApp.exe` to launch.
+
+#### Configure Backend URL for Desktop App
+
+Edit `app/.env` to set your backend API URL:
+
+```env
+BACKEND_URL=http://localhost:3000/api
+```
+
 ## Usage
 
 1. **Register**: Navigate to the register page and create an account
@@ -89,9 +124,8 @@ The frontend will run on `http://localhost:5173`
 3. **Create Tasks**: Click on any time slot in the timeline to create a task
 4. **Edit Tasks**: Click on an existing task to edit it
 5. **Delete Tasks**: Hover over a task and click the × button
-6. **Drag Tasks**: Click and drag tasks to different time slots
-7. **View Active Task**: The currently active task (based on system time) will glow
-8. **Overlap Warnings**: You'll be warned when tasks overlap
+6. **View Active Task**: The currently active task (based on system time) will glow
+7. **Overlap Warnings**: You'll be warned when tasks overlap
 
 ## Tech Stack
 
@@ -108,6 +142,10 @@ The frontend will run on `http://localhost:5173`
 - MongoDB with Mongoose
 - JWT for authentication
 - bcrypt for password hashing
+
+### Desktop App
+- Electron
+- electron-packager
 
 ## Project Structure
 
@@ -143,31 +181,26 @@ schedule-app/
 │   │   └── main.tsx
 │   ├── package.json
 │   └── vite.config.ts
+├── app/
+│   ├── main.js           # Electron main process
+│   ├── preload.js        # Secure IPC bridge
+│   ├── build.js          # Build script
+│   ├── .env              # Backend URL config
+│   ├── package.json
+│   ├── start.ps1         # Quick start script
+│   └── dist/             # Packaged applications
 └── README.md
 ```
 
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-
-### Tasks (Protected)
-- `GET /api/tasks?date=YYYY-MM-DD` - Get tasks for a date
-- `POST /api/tasks` - Create a new task
-- `PUT /api/tasks/:id` - Update a task
-- `DELETE /api/tasks/:id` - Delete a task
 
 ## Future Enhancements
 
-- Electron.js desktop app for Windows
 - System notifications for upcoming tasks
+- Cross-platform desktop builds (macOS, Linux)
 - Task templates and recurring tasks
 - Multi-day calendar view
 - Task categories and filtering
 - Search functionality
 - Export/import tasks
 
-## License
 
-MIT

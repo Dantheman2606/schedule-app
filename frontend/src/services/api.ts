@@ -1,6 +1,21 @@
 import axios, { type AxiosInstance, type AxiosError } from 'axios';
 
-const API_BASE_URL = 'http://localhost:3000/api';
+// Check if running in Electron and use the backend URL from .env
+const getApiBaseUrl = () => {
+  // @ts-ignore - window.API_CONFIG is injected by Electron
+  if (typeof window !== 'undefined' && window.API_CONFIG?.baseURL) {
+    // @ts-ignore
+    return window.API_CONFIG.baseURL;
+  }
+  // @ts-ignore - window.electron is exposed by preload.js
+  if (typeof window !== 'undefined' && window.electron?.env?.BACKEND_URL) {
+    // @ts-ignore
+    return window.electron.env.BACKEND_URL;
+  }
+  return 'http://localhost:3000/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 class ApiService {
   private api: AxiosInstance;

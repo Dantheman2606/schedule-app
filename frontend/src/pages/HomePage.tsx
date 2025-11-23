@@ -11,7 +11,6 @@ export const HomePage: React.FC = () => {
   const { tasks } = useTasks();
   const [selectedDate, setSelectedDate] = useState(getTodayString());
   const [showNewTaskForm, setShowNewTaskForm] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
 
   // Generate next 6 days
   const today = new Date();
@@ -28,12 +27,10 @@ export const HomePage: React.FC = () => {
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
-    setShowCalendar(false);
   };
 
   const handleCalendarDateSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedDate(e.target.value);
-    setShowCalendar(false);
   };
 
   return (
